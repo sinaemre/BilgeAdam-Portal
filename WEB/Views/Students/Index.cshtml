@@ -1,13 +1,13 @@
 ﻿@{
     ViewData["Title"] = "Index";
 }
-@model List<GetTeacherVM>
+@model List<GetStudentVM>
 
 <div class="row">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Öğretmenler</h3>
+                <h3 class="card-title">Öğrenciler</h3>
             </div>
             <div class="card-body">
                 <table class="display myTable nowrap" style="width:100%">
@@ -18,32 +18,39 @@
                             <th>Soyad</th>
                             <th>E-Mail</th>
                             <th>Doğum Tarihi</th>
+                            <th>Sınıf</th>
+                            <th>Öğretmen</th>
+                            <th>Ortalama</th>
                             <th>Eklenme Tarihi</th>
                             <th>Güncellenme Tarihi</th>
                             <th>Durum</th>
+                            <th>Detay</th>
                             <th>Güncelle</th>
                             <th>Sil</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var teacher in Model)
+                        @foreach (var student in Model)
                         {
                             <tr>
-                                <td>@teacher.Id</td>
-                                <td>@teacher.FirstName</td>
-                                <td>@teacher.LastName</td>
-                                <td>@teacher.Email</td>
-                                <td>@teacher.BirthDate.ToShortDateString()</td>
-                                <td>@teacher.CreatedDate</td>
-                                @if (teacher.UpdatedDate is not null)
+                                <td>@student.Id</td>
+                                <td>@student.FirstName</td>
+                                <td>@student.LastName</td>
+                                <td>@student.Email</td>
+                                <td>@student.BirthDate.ToShortDateString()</td>
+                                <td>@student.ClassroomName</td>
+                                <td>@student.TeacherName</td>
+                                <td>@student.Average</td>
+                                <td>@student.CreatedDate</td>
+                                @if (student.UpdatedDate is not null)
                                 {
-                                    <td>@teacher.UpdatedDate</td>
+                                    <td>@student.UpdatedDate</td>
                                 }
                                 else
                                 {
                                     <td> - </td>
                                 }
-                                @if (teacher.Status == ApplicationCore.Entities.Abstract.Status.Active)
+                                @if (student.Status == ApplicationCore.Entities.Abstract.Status.Active)
                                 {
                                     <td>Aktif</td>
                                 }
@@ -52,16 +59,19 @@
                                     <td>Güncellenmiş</td>
                                 }
                                 <td>
-                                    <a class="btn btn-outline-success" asp-action="UpdateTeacher" asp-route-id="@teacher.Id">Güncelle</a>
+                                    <a class="btn btn-outline-dark" asp-action="DetailStudent" asp-route-id="@student.Id">Detay</a>
+                                </td>
+                                <td>
+                                    <a class="btn btn-outline-success" asp-action="UpdateStudent" asp-route-id="@student.Id">Güncelle</a>
                                 </td>
                                 <td>
                                     <!-- Button trigger modal -->
-                                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal-@teacher.Id">
+                                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal-@student.Id">
                                         Sil
                                     </button>
 
                                     <!-- Modal -->
-                                    <div class="modal fade" id="exampleModal-@teacher.Id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal fade" id="exampleModal-@student.Id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -69,11 +79,11 @@
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    @teacher.FirstName @teacher.LastName öğretmenini silmek istediğinize emin misiniz?
+                                                    @student.FirstName @student.LastName öğretmenini silmek istediğinize emin misiniz?
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-                                                    <a asp-action="DeleteTeacher" asp-route-id="@teacher.Id" class="btn btn-danger">Evet</a>
+                                                    <a asp-action="DeleteStudent" asp-route-id="@student.Id" class="btn btn-danger">Evet</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -85,7 +95,7 @@
                 </table>
             </div>
             <div class="card-footer">
-                <a class="btn btn-outline-dark d-block" asp-action="CreateTeacher">Yeni Öğretmen Ekle</a>
+                <a class="btn btn-outline-dark d-block" asp-action="CreateStudent">Yeni Öğrenci Ekle</a>
             </div>
         </div>
     </div>

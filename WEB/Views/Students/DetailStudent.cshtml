@@ -1,0 +1,113 @@
+﻿@{
+    ViewData["Title"] = "Student Detail";
+}
+@model GetStudentDetailDTO
+<div class="container rounded bg-white mt-5 mb-5">
+    <div class="row">
+        <div class="col-md-3 border-right">
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><span class="font-weight-bold">@Model.FirstName @Model.LastName</span><span class="text-black-50">@Model.Email</span>
+                    <span class="mt-5 text-center"><a asp-action="Index" class="btn btn-primary profile-button"><i class="fa-solid fa-circle-arrow-left"></i> Geri Dön</a></span>
+                </div>
+        </div>
+        <div class="col-md-5 border-right">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right">Öğrenci Bilgileri</h4>
+                </div>
+                <div class="row mt-2">
+                  @*   <div class="col-md-6"><label class="labels">Ad</label><h5 class="form-control">@Model.FirstName</h5></div>
+                    <div class="col-md-6"><label class="labels">Soyad</label><h5 class="form-control">@Model.LastName</h5></div> *@
+                </div>
+                <div class="row mt-3">
+                  @*   <div class="col-md-12"><label class="labels">Email</label><h5 class="form-control">@Model.Email</h5></div> *@
+                    <div class="col-md-12"><label class="labels">Doğum Tarihi</label><h5 class="form-control">
+                        @(((DateTime)Model.BirthDate).ToShortDateString())</h5></div>
+                    <div class="col-md-12"><label class="labels">Sınıf</label><h5 class="form-control">@Model.ClassroomName</h5></div>
+                    <div class="col-md-12"><label class="labels">Öğretmen</label><h5 class="form-control">@Model.TeacherName</h5></div>
+                </div>
+
+           
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right">Sınavlar</h4>
+                </div>
+                <div class="col-md-12"><label class="labels">Vize</label>
+                    @if(Model.Exam1 is not null)
+                    {
+                        <h5 class="form-control">@Model.Exam1</h5>
+                    }
+                    else
+                    {
+                        <h5 class="form-control">Vize notu girilmedi...</h5>
+
+                    }
+                </div> <br>
+                <div class="col-md-12"><label class="labels">Final</label>
+                    @if (Model.Exam2 is not null)
+                    {
+                        <h5 class="form-control">@Model.Exam2</h5>
+                    }
+                    else
+                    {
+                        <h5 class="form-control">Final notu girilmedi...</h5>
+
+                    }
+                </div> <br>
+                <div class="col-md-12"><label class="labels">Proje</label>
+                    @if (Model.ProjectName is not null)
+                    {
+                        <h5 class="form-control">@Model.ProjectName</h5>
+                    }
+                    else
+                    {
+                        <h5 class="form-control">Proje teslim edilmedi...</h5>
+
+                    }
+                </div> <br>
+                <div class="col-md-12">
+                    <label class="labels">Proje Notu</label> 
+                    @if (Model.ProjectExam is not null)
+                    {
+                        <h5 class="form-control">@Model.ProjectExam</h5>
+                    }
+                    else
+                    {
+                        <h5 class="form-control">Proje notu girilmedi...</h5>
+
+                    }
+                </div> <br>
+                <div class="col-md-12">
+                    <label class="labels">Ortalama</label>  
+                    @if (Model.Average is not null)
+                    {
+                        <h5 class="form-control">@Model.Average</h5>
+                    }
+                    else
+                    {
+                        <h5 class="form-control"> - </h5>
+
+                    }<br>
+                <div class="col-md-12">
+                    <label class="labels">Durum</label>
+                    @if (Model.IsSucceed == StudentStatus.Succeed)
+                    {
+                        <h3 class="form-control text-success">Geçti</h3>
+                    }
+                    else if (Model.IsSucceed == StudentStatus.Failed)
+                    {
+                        <h3 class="form-control text-danger">Kaldı</h3>
+                    }
+                    else
+                    {
+                        <h3 class="form-control text-dark">Devam ediyor...</h3>
+
+                    }
+                </div> <br>
+
+            </div>
+        </div>
+    </div>
+</div>

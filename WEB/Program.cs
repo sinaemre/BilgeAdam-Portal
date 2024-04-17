@@ -4,6 +4,7 @@ using Autofac.Extensions.DependencyInjection;
 using DataAccess.Context;
 using DataAccess.Context.IdentityContext;
 using DataAccess.DependencyResolvers.Autofac;
+using DataAccess.FluentValidators.StudentValidators;
 using DataAccess.FluentValidators.TeacherValidators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -23,6 +24,8 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
 builder.Services.AddControllersWithViews();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateTeacherValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<UpdateTeacherValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateStudentValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateStudentValidator>();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 

@@ -3,7 +3,13 @@
 
 // Write your JavaScript code.
 $(document).ready(function () {
-    $('#myTable').DataTable();
+   $('.myTable').DataTable({
+        responsive: true,
+        scrollX: true
+   });
+
+   $('.dt-search label').html("Arama: ")
+
 });
 
 setTimeout(() => {
