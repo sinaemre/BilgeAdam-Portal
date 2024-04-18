@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ApplicationCore.DTO_s.StudentDTO
 {
-    public class CreateStudentDTO : AppUserDTO
+    public class CreateStudentDTO : AppUserDTO<DateTime?>
     {
         [Display(Name = "Sınıf")]
         public int? ClassroomId { get; set; }

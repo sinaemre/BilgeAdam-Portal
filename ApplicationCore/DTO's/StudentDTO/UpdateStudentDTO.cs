@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ApplicationCore.DTO_s.StudentDTO
 {
-    public class UpdateStudentDTO : AppUserDTO
+    public class UpdateStudentDTO : AppUserDTO<DateTime?>
     {
         public int Id { get; set; }
         public string AppUserID { get; set; }

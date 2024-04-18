@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ApplicationCore.DTO_s.TeacherDTO
 {
-    public class UpdateTeacherDTO : AppUserDTO
+    public class UpdateTeacherDTO : AppUserDTO<DateTime?>
     {
         public int Id { get; set; }
         public string AppUserID { get; set; }

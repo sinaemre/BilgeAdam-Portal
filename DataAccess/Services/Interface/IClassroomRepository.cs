@@ -9,5 +9,6 @@ namespace DataAccess.Services.Interface
 {
     public interface IClassroomRepository : IBaseRepository<Classroom>
     {
+        Task<bool> IsThereAnyStudents(int id);
     }
 }

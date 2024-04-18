@@ -1,4 +1,5 @@
-﻿using ApplicationCore.DTO_s.StudentDTO;
+﻿using ApplicationCore.DTO_s.ClassroomDTO;
+using ApplicationCore.DTO_s.StudentDTO;
 using ApplicationCore.DTO_s.TeacherDTO;
 using ApplicationCore.Entities.Concrete;
 using AutoMapper;
@@ -16,10 +17,14 @@ namespace DataAccess.AutoMapper
         {
             CreateMap<Teacher, CreateTeacherDTO>().ReverseMap();
             CreateMap<Teacher, UpdateTeacherDTO>().ReverseMap();
+            CreateMap<Teacher, ShowTeacherDTO>().ReverseMap();
 
             CreateMap<Student, GetStudentDetailDTO>().ReverseMap();
             CreateMap<Student, CreateStudentDTO>().ReverseMap();
             CreateMap<Student, UpdateStudentDTO>().ReverseMap();
+
+            CreateMap<Classroom, CreateClassroomDTO>().ReverseMap();
+            CreateMap<Classroom, UpdateClassroomDTO>().ReverseMap();
         }
     }
 }

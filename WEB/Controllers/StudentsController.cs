@@ -17,17 +17,13 @@ namespace WEB.Controllers
         private readonly IStudentRepository _studentRepo;
         private readonly IMapper _mapper;
         private readonly IClassroomRepository _classroomRepo;
-        private readonly ITeacherRepository _teacherRepo;
-        private readonly UserManager<AppUser> _userManager;
         private readonly IUserRepository _userRepo;
 
-        public StudentsController(IStudentRepository studentRepo, IMapper mapper, IClassroomRepository classroomRepo, ITeacherRepository teacherRepo, UserManager<AppUser> userManager, IUserRepository userRepo)
+        public StudentsController(IStudentRepository studentRepo, IMapper mapper, IClassroomRepository classroomRepo, IUserRepository userRepo)
         {
             _studentRepo = studentRepo;
             _mapper = mapper;
             _classroomRepo = classroomRepo;
-            _teacherRepo = teacherRepo;
-            _userManager = userManager;
             _userRepo = userRepo;
         }
         public async Task<IActionResult> Index()
@@ -119,10 +115,10 @@ namespace WEB.Controllers
             {
                 var student = _mapper.Map<Student>(model);
                 var appUser = await _userRepo.CreateAppUser(model);
-                var result = await _userManager.CreateAsync(appUser);
+                var result = await _userRepo.AddUser(appUser);
                 if (result.Succeeded)
                 {
-                    var resultRole = await _userManager.AddToRoleAsync(appUser, "student");
+                    var resultRole = await _userRepo.AddUserToRole(appUser, "student");
                     if (resultRole.Succeeded)
                     {
                         student.AppUserID = appUser.Id;

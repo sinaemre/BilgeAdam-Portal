@@ -15,20 +15,12 @@ namespace WEB.Controllers
     {
         private readonly ITeacherRepository _teacherRepo;
         private readonly IMapper _mapper;
-        private readonly UserManager<AppUser> _userManager;
-        private readonly IPasswordHasher<AppUser> _passwordHasher;
-        private readonly IStudentRepository _studentRepo;
-        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IUserRepository _userRepo;
 
-        public TeachersController(ITeacherRepository teacherRepo, IMapper mapper, UserManager<AppUser> userManager, IPasswordHasher<AppUser> passwordHasher, IStudentRepository studentRepo, IWebHostEnvironment webHostEnvironment, IUserRepository userRepo)
+        public TeachersController(ITeacherRepository teacherRepo, IMapper mapper, IUserRepository userRepo)
         {
             _teacherRepo = teacherRepo;
             _mapper = mapper;
-            _userManager = userManager;
-            _passwordHasher = passwordHasher;
-            _studentRepo = studentRepo;
-            _webHostEnvironment = webHostEnvironment;
             _userRepo = userRepo;
         }
         public async Task<IActionResult> Index()
@@ -71,11 +63,11 @@ namespace WEB.Controllers
 
                 var appUser = await _userRepo.CreateAppUser(model);
 
-                var result = await _userManager.CreateAsync(appUser);
+                var result = await _userRepo.AddUser(appUser);
 
                 if (result.Succeeded)
                 {
-                    var resultRole = await _userManager.AddToRoleAsync(appUser, "teacher");
+                    var resultRole = await _userRepo.AddUserToRole(appUser, "teacher");
                     if (resultRole.Succeeded)
                     {
                         teacher.AppUserID = appUser.Id;

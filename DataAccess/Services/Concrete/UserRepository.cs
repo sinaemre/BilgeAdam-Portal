@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.DTO_s.Abstract;
+using ApplicationCore.DTO_s.AccountDTO;
 using ApplicationCore.Entities.Abstract;
 using ApplicationCore.Entities.Concrete;
 using ApplicationCore.Entities.UserEntities.Concrete;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,16 +19,24 @@ namespace DataAccess.Services.Concrete
     {
         private readonly IPasswordHasher<AppUser> _passwordHasher;
         private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
 
-        public UserRepository(IPasswordHasher<AppUser> passwordHasher, UserManager<AppUser> userManager)
+        public UserRepository(IPasswordHasher<AppUser> passwordHasher, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
         {
             _passwordHasher = passwordHasher;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
-        public async Task<AppUser> CreateAppUser(AppUserDTO model)
+        public async Task<IdentityResult> AddUser(AppUser appUser)
+            => await _userManager.CreateAsync(appUser);
+
+        public async Task<IdentityResult> AddUserToRole(AppUser appUser, string roleName)
+            => await _userManager.AddToRoleAsync(appUser, roleName);
+
+        public async Task<AppUser> CreateAppUser(AppUserDTO<DateTime?> model)
         {
-            var userName = await UpdateUserName(model.FirstName, model.LastName);
+            var userName = await UpdateUserName(model.FirstName, model.LastName, null);
 
             var appUser = new AppUser
             {
@@ -47,12 +57,18 @@ namespace DataAccess.Services.Concrete
         public async Task<AppUser> FindUser(string id)
             => await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
 
+        public async Task<AppUser> FindUser(ClaimsPrincipal claimsPrincipal)
+        {
+            var userId = _userManager.GetUserId(claimsPrincipal);
+            return await FindUser(userId);
+        }
+
         public async Task<bool> IsEmailUsed(string email)
             => await _userManager.Users.AnyAsync(x => x.Email == email);
 
         public async Task<IdentityResult> UpdateAppUser(AppUser appUser)
         {
-            var userName = await UpdateUserName(appUser.FirstName, appUser.LastName);
+            var userName = await UpdateUserName(appUser.FirstName, appUser.LastName, appUser.Id);
             appUser.UserName = userName;
             appUser.Status = Status.Modified;
             appUser.UpdatedDate = DateTime.Now;
@@ -61,7 +77,22 @@ namespace DataAccess.Services.Concrete
             return result;
         }
 
-        public async Task<string> UpdateUserName(string firstName, string lastName)
+        public async Task<IdentityResult> UpdateAppUser(EditUserDTO model)
+        {
+            var appUser = await FindUser(model.Id);
+            if (appUser != null)
+            {
+                appUser.Email = model.Email;
+                if (model.Password != null)
+                {
+                    appUser.PasswordHash = _passwordHasher.HashPassword(appUser, model.Password);
+                }
+                return await UpdateAppUser(appUser);
+            }
+            return null;
+        }
+
+        public async Task<string> UpdateUserName(string firstName, string lastName, string? userId)
         {
             var userName = firstName
                                .ToLower()
@@ -85,7 +116,12 @@ namespace DataAccess.Services.Concrete
 
             bool result = true;
             int number = 0;
-            result = await _userManager.Users.AnyAsync(x => x.UserName == userName);
+
+            if (userId == null)
+                result = await _userManager.Users.AnyAsync(x => x.UserName == userName);
+            else
+                result = await _userManager.Users.AnyAsync(x => x.UserName == userName && x.Id != userId);
+
             while (result)
             {
                 if (!userName.EndsWith(lastName.Substring(lastName.Length - 1)))
@@ -98,5 +134,36 @@ namespace DataAccess.Services.Concrete
 
             return userName;
         }
+
+        public async Task<bool> IsUserInRole(AppUser appUser, string roleName)
+            => await _userManager.IsInRoleAsync(appUser, roleName);
+
+        public async Task<bool> Login(string userName, string password)
+        {
+            var result = await _signInManager.PasswordSignInAsync(userName, password, false, false);
+            if (result.Succeeded)
+            {
+                var user = await _userManager.FindByNameAsync(userName);
+                if (userName != null)
+                {
+                    user.LoginCount++;
+                    var resultUpdate = await UpdateAppUser(user);
+                    if (resultUpdate.Succeeded)
+                    {
+                        return true;
+                    }
+
+                }
+            }
+            return false;
+        }
+
+        public async Task Logout()
+            => await _signInManager.SignOutAsync();
+
+        public async Task<IdentityResult> ChangePassword(AppUser appUser, string oldPassword, string newPassword)
+            => await _userManager.ChangePasswordAsync(appUser, oldPassword, newPassword);
+
+       
     }
 }

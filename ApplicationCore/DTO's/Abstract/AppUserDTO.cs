@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ApplicationCore.DTO_s.Abstract
 {
-    public abstract class AppUserDTO
+    public abstract class AppUserDTO<T>
     {
         [Display(Name = "Ad")]
         public string? FirstName { get; set; }
@@ -19,6 +19,6 @@ namespace ApplicationCore.DTO_s.Abstract
         public string? Email { get; set; }
 
         [Display(Name = "Doğum Tarihi")]
-        public DateTime? BirthDate { get; set; }
+        public T BirthDate { get; set; }
     }
 }

@@ -3,7 +3,7 @@ using ApplicationCore.DTO_s.Abstract;
 
 namespace ApplicationCore.DTO_s.StudentDTO
 { 
-    public class GetStudentDetailDTO : AppUserDTO
+    public class GetStudentDetailDTO : AppUserDTO<DateTime?>
     {
         public string? ClassroomName { get; set; }
         public string? TeacherName { get; set; }
