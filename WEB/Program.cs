@@ -6,6 +6,7 @@ using DataAccess.Context.IdentityContext;
 using DataAccess.DependencyResolvers.Autofac;
 using DataAccess.FluentValidators.AccountValidators;
 using DataAccess.FluentValidators.ClassroomValidators;
+using DataAccess.FluentValidators.RoleValidators;
 using DataAccess.FluentValidators.StudentValidators;
 using DataAccess.FluentValidators.TeacherValidators;
 using FluentValidation;
@@ -33,6 +34,8 @@ builder.Services.AddValidatorsFromAssemblyContaining<UpdateClassroomValidator>()
 builder.Services.AddValidatorsFromAssemblyContaining<LoginValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<ChangePasswordValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<EditUserValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateRoleValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateRoleValidator>();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 
@@ -88,6 +91,12 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+    );
 
 app.MapControllerRoute(
     name: "default",

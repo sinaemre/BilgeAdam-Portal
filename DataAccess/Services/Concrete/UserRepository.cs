@@ -164,6 +164,31 @@ namespace DataAccess.Services.Concrete
         public async Task<IdentityResult> ChangePassword(AppUser appUser, string oldPassword, string newPassword)
             => await _userManager.ChangePasswordAsync(appUser, oldPassword, newPassword);
 
-       
+        public async Task<IdentityResult> RemoveUserFromRole(AppUser user, string roleName)
+            => await _userManager.RemoveFromRoleAsync(user, roleName);
+
+        public async Task<List<AppUser>> GetUsers()
+            => await _userManager.Users.ToListAsync();
+
+        public async Task<List<AppUser>> GetUsersByRole(string roleName, bool status)
+        {
+            var users = await GetUsers();
+            var usersInRole = new List<AppUser>();
+            var usersOutRole = new List<AppUser>();
+
+            foreach (var user in users)
+            {
+                if (await _userManager.IsInRoleAsync(user, roleName))
+                    usersInRole.Add(user);
+                
+                else
+                    usersOutRole.Add(user);
+            }
+
+            return status ? usersInRole : usersOutRole;
+        }
+
+        public async Task<bool> IsThereAnyUser(string roleName)
+            => (await GetUsersByRole(roleName, true)).Count() > 0 ? true : false;
     }
 }

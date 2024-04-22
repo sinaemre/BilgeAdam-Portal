@@ -18,9 +18,11 @@ namespace DataAccess.Services.Interface
         Task<bool> IsEmailUsed(string email);
 
         Task<AppUser> FindUser(string id);
+        
         Task<AppUser> FindUser(ClaimsPrincipal claimsPrincipal);
 
         Task<IdentityResult> UpdateAppUser(AppUser appUser);
+      
         Task<IdentityResult> UpdateAppUser(EditUserDTO model);
 
         Task<string> UpdateUserName(string firstName, string lastName, string? userId);
@@ -30,9 +32,21 @@ namespace DataAccess.Services.Interface
         Task<IdentityResult> AddUser(AppUser appUser);
 
         Task<IdentityResult> AddUserToRole(AppUser appUser, string roleName);
+        
+        Task<IdentityResult> RemoveUserFromRole(AppUser user, string roleName);
+
         Task<bool> IsUserInRole(AppUser appUser, string roleName);
+        
         Task<bool> Login(string userName, string password);
+        
         Task Logout();
-        Task<IdentityResult> ChangePassword(AppUser appUser, string oldPassword, string newPassword); 
+        
+        Task<IdentityResult> ChangePassword(AppUser appUser, string oldPassword, string newPassword);
+
+        Task<List<AppUser>> GetUsers();
+
+        Task<List<AppUser>> GetUsersByRole(string roleName, bool status);
+
+        Task<bool> IsThereAnyUser(string roleName);
     }
 }

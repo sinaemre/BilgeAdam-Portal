@@ -1,4 +1,8 @@
-﻿@if(!User.Identity.IsAuthenticated)
+﻿<li class="nav-item">
+    <a class="btn btn-outline-primary" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin Paneli</a>
+</li>
+
+@if(!User.Identity.IsAuthenticated)
 {
     <li class="nav-item ms-auto">
         <a class="btn btn-outline-success" asp-area="" asp-controller="Account" asp-action="Login">Giriş Yap</a>

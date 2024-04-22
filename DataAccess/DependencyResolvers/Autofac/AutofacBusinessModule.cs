@@ -16,10 +16,16 @@ namespace DataAccess.DependencyResolvers.Autofac
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<StudentRepository>().As<IStudentRepository>().InstancePerLifetimeScope();
+           
             builder.RegisterType<TeacherRepository>().As<ITeacherRepository>().InstancePerLifetimeScope();
+            
             builder.RegisterType<ClassroomRepository>().As<IClassroomRepository>().InstancePerLifetimeScope();
+            
             builder.RegisterType<HumanResourcesRepository>().As<IHumanResourcesRepository>().InstancePerLifetimeScope();
+            
             builder.RegisterType<UserRepository>().As<IUserRepository>().InstancePerLifetimeScope();
+            
+            builder.RegisterType<RoleRepository>().As<IRoleRepository>().InstancePerLifetimeScope();
 
             var mappingConfig = new MapperConfiguration(mc =>
             {
