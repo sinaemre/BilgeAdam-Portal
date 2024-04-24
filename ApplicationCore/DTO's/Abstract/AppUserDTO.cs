@@ -19,6 +19,7 @@ namespace ApplicationCore.DTO_s.Abstract
         public string? Email { get; set; }
 
         [Display(Name = "Doğum Tarihi")]
+        [DataType(DataType.Date)]
         public T BirthDate { get; set; }
     }
 }

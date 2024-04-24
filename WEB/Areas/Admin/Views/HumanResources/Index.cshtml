@@ -1,0 +1,97 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+@model List<GetHRVM>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">İnsan Kaynakları</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered nowrap" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Ad</th>
+                                <th>Soyad</th>
+                                <th>Doğum Tarihi</th>
+                                <th>E-Mail</th>
+                                <th>İşe Giriş Tarihi</th>
+                                <th>Eklenme Tarihi</th>
+                                <th>Güncellenme Tarihi</th>
+                                <th>Durum</th>
+                                <th>Güncelle</th>
+                                <th>Sil</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var hrPersonal in Model)
+                            {
+                                <tr>
+                                    <td>@hrPersonal.Id</td>
+                                    <td>@hrPersonal.FirstName</td>
+                                    <td>@hrPersonal.LastName</td>
+                                    <td>@hrPersonal.BirthDate.ToShortDateString()</td>
+                                    <td>@hrPersonal.Email</td>
+                                    <td>@hrPersonal.HireDate.ToShortDateString()</td>
+                                    <td>@hrPersonal.CreatedDate</td>
+                                    @if (hrPersonal.UpdatedDate != null)
+                                    {
+                                        <td>@hrPersonal.UpdatedDate</td>
+                                    }
+                                    else
+                                    {
+                                        <td> - </td>
+                                    }
+                                    @if (hrPersonal.Status == ApplicationCore.Entities.Abstract.Status.Active)
+                                    {
+                                        <td>Aktif</td>
+                                    }
+                                    else
+                                    {
+                                        <td>Güncellenmiş</td>
+                                    }
+
+                                    <td>
+                                        <a class="btn btn-outline-success" asp-action="UpdateHR" asp-route-id="@hrPersonal.Id">Güncelle</a>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-outline-danger" data-toggle="modal" data-target="#logoutModal-@hrPersonal.Id">
+                                            Sil
+                                        </a>
+
+                                        <div class="modal fade" id="logoutModal-@hrPersonal.Id" tabindex="-1" hrPersonal="dialog" aria-labelledby="exampleModalLabel"
+                                             aria-hidden="true">
+                                            <div class="modal-dialog" hrPersonal="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Silme Uyarısı</h5>
+                                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">@hrPersonal.FirstName @hrPersonal.LastName kişisini silmek istediğinize emin misiniz?</div>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">İptal</button>
+                                                        <a class="btn btn-danger" asp-action="DeleteHR" asp-route-id="@hrPersonal.Id">Evet</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+               </div>
+            </div>
+            <div class="card-footer">
+                <a class="btn btn-outline-dark d-block" asp-action="CreateHR">Yeni İnsan Kaynakları Ekle</a>
+            </div>
+        </div>
+    </div>
+</div>

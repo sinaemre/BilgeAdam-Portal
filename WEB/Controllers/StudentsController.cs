@@ -18,13 +18,15 @@ namespace WEB.Controllers
         private readonly IMapper _mapper;
         private readonly IClassroomRepository _classroomRepo;
         private readonly IUserRepository _userRepo;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public StudentsController(IStudentRepository studentRepo, IMapper mapper, IClassroomRepository classroomRepo, IUserRepository userRepo)
+        public StudentsController(IStudentRepository studentRepo, IMapper mapper, IClassroomRepository classroomRepo, IUserRepository userRepo, IWebHostEnvironment webHostEnvironment)
         {
             _studentRepo = studentRepo;
             _mapper = mapper;
             _classroomRepo = classroomRepo;
             _userRepo = userRepo;
+            _webHostEnvironment = webHostEnvironment;
         }
         public async Task<IActionResult> Index()
         {
@@ -63,6 +65,7 @@ namespace WEB.Controllers
                     var model = _mapper.Map<GetStudentDetailDTO>(student);
                     model.ClassroomName = student.Classroom.ClassroomName;
                     model.TeacherName = student.Classroom.Teacher.FirstName + " " + student.Classroom.Teacher.LastName;
+                    model.ProjectName = student.ProjectPath;
                     return View(model);
                 }
             }
@@ -123,7 +126,7 @@ namespace WEB.Controllers
                     {
                         student.AppUserID = appUser.Id;
                         await _studentRepo.AddAsync(student);
-                        TempData["Success"] = $"{student.FirstName} {student.LastName} öğrencisi sisteme kayıt edilmiştir. Kullanıcı adı: {appUser.UserName}\nŞifre: 1234";
+                        TempData["Success"] = $"{student.FirstName} {student.LastName} öğrencisi sisteme kayıt edilmiştir. Kullanıcı adı: {appUser.UserName}\nŞifre: \"1234\"";
                         return RedirectToAction("Index");
                     }
                     TempData["Error"] = "Öğrenci role eklenemedi!";
@@ -232,6 +235,64 @@ namespace WEB.Controllers
             }
             TempData["Error"] = "Öğrenci bulunamadı!";
             return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> GetStudentsByClassroomId(int id)
+        {
+            if (id > 0)
+            {
+                var students = await _studentRepo.GetFilteredListAsync
+                    (
+                        x => new GetStudentsVM
+                        {
+                            Id = x.Id,
+                            FullName = x.FirstName + " " + x.LastName,
+                            BirthDate = x.BirthDate,
+                            Exam1 = x.Exam1,
+                            Exam2 = x.Exam2,
+                            ProjectExam = x.ProjectExam,
+                            Average = x.Average,
+                            ProjectPath = x.ProjectPath
+                        },
+                        x => x.ClassroomId == id && x.Status != Status.Passive,
+                        x => x.OrderByDescending(z => z.CreatedDate)
+                    );
+
+                return View(students);
+            }
+            TempData["Error"] = "Sınıf bulunamadı!";
+            return RedirectToAction("Index", "Home");
+        }
+
+        public async Task<IActionResult> SendProject(GetStudentDetailDTO model)
+        {
+            if(model.Project is not null)
+            {
+                string uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "projects");
+                string fileName = $"{Guid.NewGuid()}_{model.FirstName}_{model.LastName}_{model.Project.FileName}";
+                string filePath = Path.Combine(uploadDir, fileName);
+                FileStream fileStream = new FileStream(filePath, FileMode.Create);
+                await model.Project.CopyToAsync(fileStream);
+                fileStream.Close();
+
+                var student = await _studentRepo.GetByIdAsync(model.Id);
+                student.ProjectPath = fileName;
+                
+                await _studentRepo.UpdateAsync(student);
+                TempData["Success"] = "Proje yüklendi!";
+                return RedirectToAction("DetailStudent", new { id = model.Id });
+            }
+            TempData["Error"] = "Proje yüklenemedi!";
+            return RedirectToAction("DetailStudent", new { id = model.Id });
+        }
+
+
+        public FileResult Download(string filePath)
+        {
+            string uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "projects/");
+            byte[] fileBytes = System.IO.File.ReadAllBytes(uploadDir + filePath);
+            string fileName = filePath;
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
         }
     }
 }

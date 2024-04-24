@@ -14,6 +14,7 @@ namespace DataAccess.Services.Interface
     public interface IUserRepository
     {
         Task<AppUser> CreateAppUser(AppUserDTO<DateTime?> model);
+        Task<AppUser> CreateAppUser(AppUserDTO<DateTime> model);
 
         Task<bool> IsEmailUsed(string email);
 

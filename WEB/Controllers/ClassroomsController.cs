@@ -5,6 +5,7 @@ using ApplicationCore.Entities.Concrete;
 using ApplicationCore.Entities.UserEntities.Concrete;
 using AutoMapper;
 using DataAccess.Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using WEB.Models.ViewModels;
 
 namespace WEB.Controllers
 {
+    //[Authorize(Roles = "admin, humanResources")]
     public class ClassroomsController : Controller
     {
         private readonly IClassroomRepository _classroomRepo;
@@ -188,6 +190,32 @@ namespace WEB.Controllers
             }
             TempData["Error"] = "Sınıf bulunamadı!";
             return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> GetClassroomByTeacher()
+        {
+            var appUser = await _userRepo.FindUser(HttpContext.User);
+            var teacher = await _teacherRepo.GetByDefaultAsync(x => x.AppUserID == appUser.Id);
+            if (teacher is not null)
+            {
+                var classrooms = await _classroomRepo.GetFilteredListAsync
+                    (
+                        x => new GetClassroomByTeacherVM
+                        {
+                            Id = x.Id,
+                            ClassroomName = x.ClassroomName,
+                            ClassroomDescription = x.Description,
+                            ClassroomSize = x.Students.Count()
+                        },
+                        x => x.TeacherId == teacher.Id && x.Status != Status.Passive,
+                        x => x.OrderByDescending(z => z.CreatedDate),
+                        x => x.Include(z => z.Students)
+                    );
+
+                return View(classrooms);
+            }
+            TempData["Error"] = "Sınıflar bulunamadı!";
+            return RedirectToAction("Index", "Home");
         }
     }
 }

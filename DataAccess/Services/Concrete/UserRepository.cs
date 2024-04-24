@@ -51,6 +51,23 @@ namespace DataAccess.Services.Concrete
             return appUser;
         }
 
+        public async Task<AppUser> CreateAppUser(AppUserDTO<DateTime> model)
+        {
+            var userName = await UpdateUserName(model.FirstName, model.LastName, null);
+
+            var appUser = new AppUser
+            {
+                UserName = userName,
+                Email = model.Email,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                BirthDate = model.BirthDate,
+            };
+
+            appUser.PasswordHash = _passwordHasher.HashPassword(appUser, "1234");
+            return appUser;
+        }
+
         public async Task<IdentityResult> DeleteAppUser(AppUser appUser)
             => await _userManager.DeleteAsync(appUser);
 

@@ -33,11 +33,17 @@ namespace WEB.Controllers
                             TempData["Success"] = "Hoşgeldiniz. İlk kez giriş yağptığınız için şifrenizi değiştirmeniz gerekiyor. Lütfen yeni şifre giriniz!";
                             return RedirectToAction("ChangePassword", new { id = appUser.Id });
                         }
-                        //if (await _userRepo.IsUserInRole(appUser, "admin"))
-                        //{
-
-                        //}
+                        if (await _userRepo.IsUserInRole(appUser, "admin"))
+                        {
+                            TempData["Success"] = "Hoşgeldin Admin!";
+                            return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+                        }
+                        
                         TempData["Success"] = $"Hoşgeldiniz {appUser.FirstName} {appUser.LastName}";
+                        
+                        if (await _userRepo.IsUserInRole(appUser, "teacher"))
+                            return RedirectToAction("GetClassroomByTeacher", "Classrooms");
+                        
                         return RedirectToAction("Index", "Home");
                     }
                     TempData["Error"] = "Kullanıcı bulunamadı!";

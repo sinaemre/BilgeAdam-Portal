@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.DTO_s.ClassroomDTO;
+using ApplicationCore.DTO_s.HumanResourcesDTO;
 using ApplicationCore.DTO_s.StudentDTO;
 using ApplicationCore.DTO_s.TeacherDTO;
 using ApplicationCore.Entities.Concrete;
@@ -25,6 +26,9 @@ namespace DataAccess.AutoMapper
 
             CreateMap<Classroom, CreateClassroomDTO>().ReverseMap();
             CreateMap<Classroom, UpdateClassroomDTO>().ReverseMap();
+         
+            CreateMap<HumanResources, CreateHRDTO>().ReverseMap();
+            CreateMap<HumanResources, UpdateHRDTO>().ReverseMap();
         }
     }
 }

@@ -6,6 +6,7 @@ using DataAccess.Context.IdentityContext;
 using DataAccess.DependencyResolvers.Autofac;
 using DataAccess.FluentValidators.AccountValidators;
 using DataAccess.FluentValidators.ClassroomValidators;
+using DataAccess.FluentValidators.HRValidators;
 using DataAccess.FluentValidators.RoleValidators;
 using DataAccess.FluentValidators.StudentValidators;
 using DataAccess.FluentValidators.TeacherValidators;
@@ -36,6 +37,8 @@ builder.Services.AddValidatorsFromAssemblyContaining<ChangePasswordValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<EditUserValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateRoleValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<UpdateRoleValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateHRValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateHRValidator>();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 
@@ -90,6 +93,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 

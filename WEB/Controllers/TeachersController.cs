@@ -72,7 +72,7 @@ namespace WEB.Controllers
                     {
                         teacher.AppUserID = appUser.Id;
                         await _teacherRepo.AddAsync(teacher);
-                        TempData["Success"] = $"{teacher.FirstName} {teacher.LastName} öğretmeni sisteme kayıt edilmiştir. Kullanıcı adı: {appUser.UserName},\nŞifre: 1234";
+                        TempData["Success"] = $"{teacher.FirstName} {teacher.LastName} öğretmeni sisteme kayıt edilmiştir. Kullanıcı adı: {appUser.UserName},\nŞifre: \"1234\"";
                         return RedirectToAction("Index");
                     }
                     TempData["Error"] = "Öğretmen role eklenemedi!";
