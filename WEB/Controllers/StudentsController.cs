@@ -5,6 +5,7 @@ using ApplicationCore.Entities.Concrete;
 using ApplicationCore.Entities.UserEntities.Concrete;
 using AutoMapper;
 using DataAccess.Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,8 @@ namespace WEB.Controllers
             _userRepo = userRepo;
             _webHostEnvironment = webHostEnvironment;
         }
+        
+        [Authorize(Roles = "admin, humanResources")]
         public async Task<IActionResult> Index()
         {
             var students = await _studentRepo.GetFilteredListAsync
@@ -55,11 +58,25 @@ namespace WEB.Controllers
             return View(students);
         }
 
-        public async Task<IActionResult> DetailStudent(int id)
+        [Authorize(Roles = "admin, humanResources, teacher, student")]
+        public async Task<IActionResult> DetailStudent(int? id)
         {
-            if (id > 0)
+            if (id == null)
             {
-                var student = await _studentRepo.GetStudentById(id);
+                var user = await _userRepo.FindUser(HttpContext.User);
+                var entity = await _studentRepo.GetByDefaultAsync(x => x.AppUserID == user.Id);
+                var student = await _studentRepo.GetStudentById(entity.Id);
+                if (student is not null)
+                {
+                    var model = _mapper.Map<GetStudentDetailDTO>(student);
+                    model.ClassroomName = student.Classroom.ClassroomName;
+                    model.TeacherName = student.Classroom.Teacher.FirstName + " " + student.Classroom.Teacher.LastName;
+                    return View(model);
+                }
+            }
+            if (id > 0 && id != null)
+            {
+                var student = await _studentRepo.GetStudentById((int)id);
                 if (student is not null)
                 {
                     var model = _mapper.Map<GetStudentDetailDTO>(student);
@@ -72,6 +89,7 @@ namespace WEB.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [Authorize(Roles = "admin, humanResources")]
         public async Task<IActionResult> CreateStudent()
         {
             var classrooms = await _classroomRepo.GetFilteredListAsync
@@ -94,6 +112,7 @@ namespace WEB.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "admin, humanResources")]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateStudent(CreateStudentDTO model)
         {
@@ -152,6 +171,7 @@ namespace WEB.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "admin, humanResources")]
         public async Task<IActionResult> UpdateStudent(int id)
         {
             if (id > 0)
@@ -182,6 +202,7 @@ namespace WEB.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "admin, humanResources")]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateStudent(UpdateStudentDTO model)
         {
@@ -206,7 +227,7 @@ namespace WEB.Controllers
                 if (model.Image != null)
                 {
                     string uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "studentsImages");
-                    if (!string.Equals(model.ImagePath, "default.png"))
+                    if (!string.Equals(model.ImagePath, "default.png") && model.ImagePath != null)
                     {
                         string oldPath = Path.Combine(uploadDir, model.ImagePath);
                         if (System.IO.File.Exists(oldPath))
@@ -248,6 +269,7 @@ namespace WEB.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "admin, humanResources")]
         public async Task<IActionResult> DeleteStudent(int id)
         {
             if (id > 0)
@@ -271,6 +293,7 @@ namespace WEB.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "admin, humanResources, teacher")]
         public async Task<IActionResult> GetStudentsByClassroomId(int id)
         {
             if (id > 0)
@@ -298,6 +321,7 @@ namespace WEB.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [Authorize(Roles = "admin, teacher")]
         [HttpPost]
         public async Task<IActionResult> EnterExam(GetStudentDetailDTO model)
         {
@@ -320,6 +344,7 @@ namespace WEB.Controllers
             return RedirectToAction("DetailStudent", new { id = model.Id });
         }
 
+        [Authorize(Roles = "admin, student")]
         [HttpPost]
         public async Task<IActionResult> SendProject(GetStudentDetailDTO model)
         {
@@ -344,6 +369,7 @@ namespace WEB.Controllers
             return RedirectToAction("DetailStudent", new { id = model.Id });
         }
 
+        [Authorize(Roles = "admin, teacher")]
         public FileResult Download(string filePath)
         {
             string uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "projects/");

@@ -13,7 +13,6 @@ using WEB.Models.ViewModels;
 
 namespace WEB.Controllers
 {
-    //[Authorize(Roles = "admin, humanResources")]
     public class ClassroomsController : Controller
     {
         private readonly IClassroomRepository _classroomRepo;
@@ -28,6 +27,8 @@ namespace WEB.Controllers
             _teacherRepo = teacherRepo;
             _userRepo = userRepo;
         }
+
+        [Authorize(Roles = "admin, humanResources")]
         public async Task<IActionResult> Index()
         {
             var classrooms = await _classroomRepo.GetFilteredListAsync
@@ -51,6 +52,7 @@ namespace WEB.Controllers
             return View(classrooms);
         }
 
+        [Authorize(Roles = "admin, humanResources")]
         public async Task<IActionResult> CreateClassroom()
         {
             var teachers = await _teacherRepo.GetFilteredListAsync
@@ -69,6 +71,7 @@ namespace WEB.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "admin, humanResources")]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateClassroom(CreateClassroomDTO model)
         {
@@ -101,6 +104,7 @@ namespace WEB.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "admin, humanResources")]
         public async Task<IActionResult> UpdateClassroom(int id)
         {
             if (id > 0)
@@ -128,6 +132,7 @@ namespace WEB.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "admin, humanResources")]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateClassroom(UpdateClassroomDTO model)
         {
@@ -170,6 +175,7 @@ namespace WEB.Controllers
 
         }
 
+        [Authorize(Roles = "admin, humanResources")]
         public async Task<IActionResult> DeleteClassroom(int id)
         {
             if (id > 0)
@@ -192,6 +198,7 @@ namespace WEB.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "admin, humanResources, teacher")]
         public async Task<IActionResult> GetClassroomByTeacher()
         {
             var appUser = await _userRepo.FindUser(HttpContext.User);

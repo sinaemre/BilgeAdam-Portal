@@ -3,11 +3,13 @@ using ApplicationCore.Entities.Abstract;
 using ApplicationCore.Entities.Concrete;
 using AutoMapper;
 using DataAccess.Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WEB.Areas.Admin.Models;
 
 namespace WEB.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "admin")]
     [Area("Admin")]
     public class HumanResourcesController : Controller
     {

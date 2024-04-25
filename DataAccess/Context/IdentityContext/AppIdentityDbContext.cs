@@ -24,7 +24,7 @@ namespace DataAccess.Context.IdentityContext
 
         public AppIdentityDbContext(DbContextOptions<AppIdentityDbContext> options) : base(options)
         {
-
+            Database.Migrate();
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

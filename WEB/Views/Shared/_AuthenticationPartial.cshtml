@@ -1,49 +1,75 @@
-﻿<li class="nav-item">
-    <a class="btn btn-outline-primary" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin Paneli</a>
-</li>
-
-@if(!User.Identity.IsAuthenticated)
-{
-    <li class="nav-item ms-auto">
-        <a class="btn btn-outline-success" asp-area="" asp-controller="Account" asp-action="Login">Giriş Yap</a>
-    </li>
-}
-else
-{
-    @if (User.IsInRole("teacher"))
+﻿<div class="d-flex ms-auto">
+    @if (!User.Identity.IsAuthenticated)
     {
-        <li class="nav-item mx-2">
-            <a class="btn btn-outline-secondary" asp-area="" asp-controller="Classrooms" asp-action="GetClassroomByTeacher">Sınıflarım</a>
+        <li class="nav-item ms-auto">
+            <a class="btn btn-outline-success" asp-area="" asp-controller="Account" asp-action="Login">Giriş Yap</a>
         </li>
     }
+    else
+    {
+        @if (User.IsInRole("humanResources") || User.IsInRole("admin"))
+        {
+            <li class="nav-item p-1">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Teachers" asp-action="Index">Öğretmenler</a>
+            </li>
+            <li class="nav-item p-1">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Students" asp-action="Index">Öğrenciler</a>
+            </li>
+            <li class="nav-item p-1">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Classrooms" asp-action="Index">Sınıflar</a>
+            </li>
+        }
 
-    <li class="nav-item ms-auto">
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            Çıkış Yap
-        </button>
+        @if (User.IsInRole("admin"))
+        {
+            <li class="nav-item p-1">
+                <a class="btn btn-outline-primary" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin Paneli</a>
+            </li>
+        }
 
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Çıkış Yapma Uyarısı</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        @User.Identity.Name çıkış yapmak istediğinize emin misiniz?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-                        <a asp-controller="Account" asp-action="Logout" class="btn btn-danger">Evet</a>
+        @if (User.IsInRole("teacher"))
+        {
+            <li class="nav-item p-1">
+                <a class="btn btn-outline-secondary" asp-area="" asp-controller="Classrooms" asp-action="GetClassroomByTeacher">Sınıflarım</a>
+            </li>
+        }
+
+        @if (User.IsInRole("student"))
+        {
+            <li class="nav-item p-1">
+                <a class="btn btn-outline-warning" asp-area="" asp-controller="Students" asp-action="DetailStudent">Notlarım</a>
+            </li>
+        }
+
+        <li class="nav-item  p-1">
+            <a class="btn btn-outline-secondary" asp-area="" asp-controller="Account" asp-action="EditUser">Bilgileri Düzenle</a>
+        </li>
+        <li class="nav-item p-1">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Çıkış Yap
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Çıkış Yapma Uyarısı</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            @User.Identity.Name çıkış yapmak istediğinize emin misiniz?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                            <a asp-controller="Account" asp-action="Logout" class="btn btn-danger">Evet</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </li>
+        </li>
 
-    <li class="nav-item mx-2">
-        <a class="btn btn-outline-secondary" asp-area="" asp-controller="Account" asp-action="EditUser">Bilgileri Düzenle</a>
-    </li>
-}
+       
+    }
+</div>

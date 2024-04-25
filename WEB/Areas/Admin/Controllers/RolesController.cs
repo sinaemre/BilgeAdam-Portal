@@ -1,12 +1,14 @@
 ﻿using ApplicationCore.DTO_s.RoleDTO;
 using ApplicationCore.Entities.UserEntities.Concrete;
 using DataAccess.Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 
 namespace WEB.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "admin")]
     [Area("Admin")]
     public class RolesController : Controller
     {

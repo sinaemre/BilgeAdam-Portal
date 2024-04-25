@@ -18,7 +18,7 @@ namespace DataAccess.Context
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-            
+            Database.Migrate();
         }
 
         public DbSet<Teacher> Teachers { get; set; }

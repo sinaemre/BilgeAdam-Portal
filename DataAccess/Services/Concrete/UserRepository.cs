@@ -85,11 +85,13 @@ namespace DataAccess.Services.Concrete
 
         public async Task<IdentityResult> UpdateAppUser(AppUser appUser)
         {
-            var userName = await UpdateUserName(appUser.FirstName, appUser.LastName, appUser.Id);
-            appUser.UserName = userName;
-            appUser.Status = Status.Modified;
-            appUser.UpdatedDate = DateTime.Now;
-
+            if (!await _userManager.IsInRoleAsync(appUser, "admin"))
+            {
+                var userName = await UpdateUserName(appUser.FirstName, appUser.LastName, appUser.Id);
+                appUser.UserName = userName;
+                appUser.Status = Status.Modified;
+                appUser.UpdatedDate = DateTime.Now;
+            }
             var result = await _userManager.UpdateAsync(appUser);
             return result;
         }
@@ -161,7 +163,7 @@ namespace DataAccess.Services.Concrete
             if (result.Succeeded)
             {
                 var user = await _userManager.FindByNameAsync(userName);
-                if (userName != null)
+                if (userName != null )
                 {
                     user.LoginCount++;
                     var resultUpdate = await UpdateAppUser(user);

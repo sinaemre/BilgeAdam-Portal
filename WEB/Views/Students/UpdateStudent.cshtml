@@ -17,14 +17,22 @@
                             <div class="card-body p-md-5 text-black">
                                 <h3 class="mb-5 text-uppercase d-block">Öğrenci Güncelle</h3>
 
-                                <form asp-action="UpdateStudent">
+                                <form asp-action="UpdateStudent" enctype="multipart/form-data">
                                     <input type="hidden" asp-for="Id" />
                                     <input type="hidden" asp-for="CreatedDate" />
                                     <input type="hidden" asp-for="UpdatedDate" />
                                     <input type="hidden" asp-for="AppUserID" />
+                                    <input type="hidden" asp-for="ImagePath" />
                                     <div class=" my-2">
                                         <div class="d-flex justify-content-center mb-2">
-                                            <img id="image" width="150" height="150" class="rounded-circle justify-content-center" src="~/studentsImages/@Model.ImagePath" />
+                                            @if (Model.Image != null)
+                                            {
+                                                <img id="image" width="150" height="150" class="rounded-circle justify-content-center" src="~/studentsImages/@Model.ImagePath" />
+                                            }
+                                            else
+                                            {
+                                                <img id="image" width="150" height="150" class="rounded-circle justify-content-center" src="~/studentsImages/default.png" />
+                                            }
                                         </div>
                                         <input id="uploadImage" class="form-control" asp-for="Image" />
                                     </div>

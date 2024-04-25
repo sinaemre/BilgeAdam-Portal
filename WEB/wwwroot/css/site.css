@@ -85,3 +85,7 @@ div.dt-container {
     cursor: pointer;
     border: solid 1px #BA68C8
 }
+
+.modal-backdrop {
+    z-index: 1 !important
+}

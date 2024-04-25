@@ -28,16 +28,18 @@ namespace WEB.Controllers
                     var appUser = await _userRepo.FindUser(HttpContext.User);
                     if (appUser != null)
                     {
-                        if (appUser.LoginCount == 1 && !await _userRepo.IsUserInRole(appUser, "admin"))
-                        {
-                            TempData["Success"] = "Hoşgeldiniz. İlk kez giriş yağptığınız için şifrenizi değiştirmeniz gerekiyor. Lütfen yeni şifre giriniz!";
-                            return RedirectToAction("ChangePassword", new { id = appUser.Id });
-                        }
                         if (await _userRepo.IsUserInRole(appUser, "admin"))
                         {
                             TempData["Success"] = "Hoşgeldin Admin!";
                             return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
                         }
+
+                        if (appUser.LoginCount == 1 && !await _userRepo.IsUserInRole(appUser, "admin"))
+                        {
+                            TempData["Success"] = "Hoşgeldiniz. İlk kez giriş yağptığınız için şifrenizi değiştirmeniz gerekiyor. Lütfen yeni şifre giriniz!";
+                            return RedirectToAction("ChangePassword", new { id = appUser.Id });
+                        }
+                      
 
                         TempData["Success"] = $"Hoşgeldiniz {appUser.FirstName} {appUser.LastName}";
 

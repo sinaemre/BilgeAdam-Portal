@@ -4,6 +4,7 @@ using ApplicationCore.Entities.Concrete;
 using ApplicationCore.Entities.UserEntities.Concrete;
 using AutoMapper;
 using DataAccess.Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using WEB.Models.ViewModels;
 
 namespace WEB.Controllers
 {
+    [Authorize(Roles = "admin, humanResources")]
     public class TeachersController : Controller
     {
         private readonly ITeacherRepository _teacherRepo;
