@@ -15,7 +15,10 @@ namespace ApplicationCore.DTO_s.StudentDTO
         public double? ProjectExam { get; set; }
         public string? ProjectName { get; set; }
         public double? Average { get; set; }
+        public string? ProjectPath { get; set; }
         public IFormFile? Project { get; set; }
+        public string? ImagePath { get; set; }
+        public IFormFile? Image { get; set; }
         public StudentStatus IsSucceed 
         {
             get

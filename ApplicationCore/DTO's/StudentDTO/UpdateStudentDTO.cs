@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.DTO_s.Abstract;
 using ApplicationCore.DTO_s.ClassroomDTO;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,6 +16,8 @@ namespace ApplicationCore.DTO_s.StudentDTO
         public string AppUserID { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
+        public string? ImagePath { get; set; }
+        public IFormFile? Image { get; set; }
 
         [Display(Name = "Sınıf")]
         public int? ClassroomId { get; set; }

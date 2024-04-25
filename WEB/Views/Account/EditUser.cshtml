@@ -15,7 +15,7 @@
                 <input type="hidden" asp-for="UpdatedDate" />
                 <input type="hidden" asp-for="FirstName" />
                 <input type="hidden" asp-for="LastName" />
-                <input type="hidden" asp-for="BirthDate" />
+      
                 <input type="hidden" asp-for="UserName" />
                 <div class="card-body">
                     <div>
@@ -35,7 +35,7 @@
                     </div>
                     <div>
                         <label asp-for="BirthDate" class="form-label"></label>
-                        <input disabled asp-for="BirthDate" class="form-control" />
+                        <input disabled type="text" asp-for="BirthDate" class="form-control" />
                         <span asp-validation-for="BirthDate" class="text-danger"></span>
                     </div>
                     <div>

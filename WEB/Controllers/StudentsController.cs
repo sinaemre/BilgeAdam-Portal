@@ -65,7 +65,6 @@ namespace WEB.Controllers
                     var model = _mapper.Map<GetStudentDetailDTO>(student);
                     model.ClassroomName = student.Classroom.ClassroomName;
                     model.TeacherName = student.Classroom.Teacher.FirstName + " " + student.Classroom.Teacher.LastName;
-                    model.ProjectName = student.ProjectPath;
                     return View(model);
                 }
             }
@@ -116,7 +115,21 @@ namespace WEB.Controllers
 
             if (ModelState.IsValid)
             {
+                string imageName = "default.png";
+                if (model.Image != null)
+                {
+                    string uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "studentsImages");
+                    imageName = $"{Guid.NewGuid()}_{model.FirstName}_{model.LastName}_{model.Image.FileName}";
+                    string filePath = Path.Combine(uploadDir, imageName);
+                    FileStream fileStream = new FileStream(filePath, FileMode.Create);
+                    await model.Image.CopyToAsync(fileStream);
+                    fileStream.Close();
+                }
+                
                 var student = _mapper.Map<Student>(model);
+                
+                student.ImagePath = imageName;
+                
                 var appUser = await _userRepo.CreateAppUser(model);
                 var result = await _userRepo.AddUser(appUser);
                 if (result.Succeeded)
@@ -189,7 +202,28 @@ namespace WEB.Controllers
             model.Classrooms = classrooms;
             if (ModelState.IsValid)
             {
+                string imageName = "default.png";
+                if (model.Image != null)
+                {
+                    string uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "studentsImages");
+                    if (!string.Equals(model.ImagePath, "default.png"))
+                    {
+                        string oldPath = Path.Combine(uploadDir, model.ImagePath);
+                        if (System.IO.File.Exists(oldPath))
+                        {
+                            System.IO.File.Delete(oldPath);
+                        }
+                    }
+
+                    imageName = $"{Guid.NewGuid()}_{model.FirstName}_{model.LastName}_{model.Image.FileName}";
+                    string filePath = Path.Combine(uploadDir, imageName);
+                    FileStream fileStream = new FileStream(filePath, FileMode.Create);
+                    await model.Image.CopyToAsync(fileStream);
+                    fileStream.Close();
+                }
+
                 var student = _mapper.Map<Student>(model);
+                student.ImagePath = imageName;
                 var appUser = await _userRepo.FindUser(student.AppUserID);
                 if (appUser is not null)
                 {
@@ -264,9 +298,32 @@ namespace WEB.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> EnterExam(GetStudentDetailDTO model)
+        {
+            if (ModelState.IsValid)
+            {
+                var student = await _studentRepo.GetByIdAsync(model.Id);
+                if (student != null)
+                {
+                    student.Exam1 = model.Exam1;
+                    student.Exam2 = model.Exam2;
+                    student.ProjectExam = model.ProjectExam;
+                    await _studentRepo.UpdateAsync(student);
+                    TempData["Success"] = "Not girişi yapılmıştır!";
+                    return RedirectToAction("DetailStudent", new { id = model.Id });
+                }
+                TempData["Error"] = "Hata oluştu!";
+                return RedirectToAction("DetailStudent", new { id = model.Id });
+            }
+            TempData["Error"] = "Lütfen aşağıdaki kurallara uyunuz!";
+            return RedirectToAction("DetailStudent", new { id = model.Id });
+        }
+
+        [HttpPost]
         public async Task<IActionResult> SendProject(GetStudentDetailDTO model)
         {
-            if(model.Project is not null)
+            if (model.Project is not null)
             {
                 string uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "projects");
                 string fileName = $"{Guid.NewGuid()}_{model.FirstName}_{model.LastName}_{model.Project.FileName}";
@@ -277,7 +334,8 @@ namespace WEB.Controllers
 
                 var student = await _studentRepo.GetByIdAsync(model.Id);
                 student.ProjectPath = fileName;
-                
+                student.ProjectName = model.ProjectName;
+
                 await _studentRepo.UpdateAsync(student);
                 TempData["Success"] = "Proje yüklendi!";
                 return RedirectToAction("DetailStudent", new { id = model.Id });
@@ -285,7 +343,6 @@ namespace WEB.Controllers
             TempData["Error"] = "Proje yüklenemedi!";
             return RedirectToAction("DetailStudent", new { id = model.Id });
         }
-
 
         public FileResult Download(string filePath)
         {

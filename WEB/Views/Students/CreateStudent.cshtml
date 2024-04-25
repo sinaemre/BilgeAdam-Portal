@@ -17,7 +17,13 @@
                             <div class="card-body p-md-5 text-black">
                                 <h3 class="mb-5 text-uppercase d-block">Yeni Öğrenci Ekle</h3>
 
-                                <form asp-action="CreateStudent">
+                                <form asp-action="CreateStudent" enctype="multipart/form-data">
+                                    <div class=" my-2">
+                                        <div class="d-flex justify-content-center mb-2">
+                                            <img id="image" width="150" height="150" class="rounded-circle justify-content-center" src="~/studentsImages/default.png" />
+                                        </div>
+                                        <input id="uploadImage" class="form-control" asp-for="Image" />
+                                    </div>
                                     <div class="row">
                                         <div class="col-md-12 mb-4">
                                             <div data-mdb-input-init class="form-outline">
@@ -53,13 +59,13 @@
                                         <div class="col-md-12 mb-4">
                                             <div data-mdb-input-init class="form-outline">
                                                 <label asp-for="ClassroomId" class="form-label" for="form3Example1n1"></label>
-                                               <select asp-for="ClassroomId" class="form-control form-control-lg">
-                                                   <option selected disabled value="0">Lütfen bir sınıf seçiniz!</option>
-                                                   @foreach (var classroom in Model.Classrooms)
+                                                <select asp-for="ClassroomId" class="form-control form-control-lg">
+                                                    <option selected disabled value="0">Lütfen bir sınıf seçiniz!</option>
+                                                    @foreach (var classroom in Model.Classrooms)
                                                     {
                                                         <option value="@classroom.Id">@classroom.ClassroomName (@classroom.ClassroomDescription) - @classroom.TeacherName - (Sınıf Mevcudu: @classroom.ClassroomSize)</option>
                                                     }
-                                               </select>
+                                                </select>
                                                 <span asp-validation-for="ClassroomId" class="text-danger"></span>
                                             </div>
                                         </div>

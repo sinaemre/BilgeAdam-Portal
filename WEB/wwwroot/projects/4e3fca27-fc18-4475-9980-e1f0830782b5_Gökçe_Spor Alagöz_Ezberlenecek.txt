@@ -1,0 +1,10 @@
+1)Controller eklenecek diye duyuyorsanız Controller klasörüne ekleyeceksiniz. 
+2)View ekleneceği zaman Action'a sağ tıklayıp Add View diyeceğiz.
+3)View adı Action ile aynı olmak zorunda.
+4)Bir action'ın View'ine gidileceği zaman sağ tıklayıp Go To View e basıyoruz.
+5)Bir şey ekleneceğinde mesela DTO nereye diye sormayıp DTO klasörünü buluyoruz. 
+6)Service ekliyoruz dediğimde Service klasörünü buluyoruz.
+7)Interface ekliyoruz dediğimde Interface klasörünü buluyoruz.
+8)Concrete klasörünün içine sadece Class eklenir. 
+9)Abstract klasörünün içine sadece Abstract Class'lar eklenir.
+

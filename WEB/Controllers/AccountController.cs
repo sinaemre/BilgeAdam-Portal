@@ -38,12 +38,12 @@ namespace WEB.Controllers
                             TempData["Success"] = "Hoşgeldin Admin!";
                             return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
                         }
-                        
+
                         TempData["Success"] = $"Hoşgeldiniz {appUser.FirstName} {appUser.LastName}";
-                        
+
                         if (await _userRepo.IsUserInRole(appUser, "teacher"))
                             return RedirectToAction("GetClassroomByTeacher", "Classrooms");
-                        
+
                         return RedirectToAction("Index", "Home");
                     }
                     TempData["Error"] = "Kullanıcı bulunamadı!";
@@ -126,9 +126,11 @@ namespace WEB.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> EditUser(EditUserDTO model)
         {
+            var user = await _userRepo.FindUser(HttpContext.User);
+            model.BirthDate = user.BirthDate.ToShortDateString();
+
             if (ModelState.IsValid)
             {
-                var user = await _userRepo.FindUser(HttpContext.User);
                 if (user != null)
                 {
                     var result = await _userRepo.UpdateAppUser(model);

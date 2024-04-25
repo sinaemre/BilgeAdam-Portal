@@ -59,7 +59,14 @@ namespace ApplicationCore.Entities.Concrete
 
         public string? ProjectPath { get; set; }
 
+        public string? ProjectName { get; set; }
+
         [NotMapped]
         public IFormFile? Project { get; set; }
+
+        public string? ImagePath { get; set; }
+
+        [NotMapped]
+        public IFormFile? Image { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Context.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240425072039_UpdateStudentProject")]
+    partial class UpdateStudentProject
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,7 +69,7 @@ namespace DataAccess.Context.Migrations
                         {
                             Id = 1,
                             ClassroomName = "YZL-8743",
-                            CreatedDate = new DateTime(2024, 4, 25, 13, 26, 34, 673, DateTimeKind.Local).AddTicks(2595),
+                            CreatedDate = new DateTime(2024, 4, 25, 10, 20, 37, 783, DateTimeKind.Local).AddTicks(9888),
                             Description = "320 Saat .NET Full Stack Yazılım Uzmanlığı Eğitimi",
                             Status = 1,
                             TeacherId = 1
@@ -127,7 +130,7 @@ namespace DataAccess.Context.Migrations
                             Id = 1,
                             AppUserID = "1122d035-d752-4629-a593-ce22c8958344",
                             BirthDate = new DateTime(1990, 2, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedDate = new DateTime(2024, 4, 25, 13, 26, 34, 673, DateTimeKind.Local).AddTicks(2997),
+                            CreatedDate = new DateTime(2024, 4, 25, 10, 20, 37, 784, DateTimeKind.Local).AddTicks(223),
                             Email = "hulya.celebi@bilgeadam.com",
                             FirstName = "Hülya",
                             HireDate = new DateTime(2021, 5, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -175,9 +178,6 @@ namespace DataAccess.Context.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("ImagePath")
-                        .HasColumnType("text");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -211,7 +211,7 @@ namespace DataAccess.Context.Migrations
                             AppUserID = "08f6fd59-a808-46ea-aa80-bc6d85eaa2f9",
                             BirthDate = new DateTime(1994, 1, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ClassroomId = 1,
-                            CreatedDate = new DateTime(2024, 4, 25, 13, 26, 34, 673, DateTimeKind.Local).AddTicks(2776),
+                            CreatedDate = new DateTime(2024, 4, 25, 10, 20, 37, 784, DateTimeKind.Local).AddTicks(60),
                             Email = "aygun.ziya@bilgeadam.com",
                             FirstName = "Ziya",
                             LastName = "Aygün",
@@ -223,7 +223,7 @@ namespace DataAccess.Context.Migrations
                             AppUserID = "428e15d3-3141-4cb0-b245-f0201f6929c7",
                             BirthDate = new DateTime(1991, 5, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ClassroomId = 1,
-                            CreatedDate = new DateTime(2024, 4, 25, 13, 26, 34, 673, DateTimeKind.Local).AddTicks(2833),
+                            CreatedDate = new DateTime(2024, 4, 25, 10, 20, 37, 784, DateTimeKind.Local).AddTicks(65),
                             Email = "gokce.sporalagoz@bilgeadam.com",
                             FirstName = "Gökçe",
                             LastName = "Spor Alagöz",
@@ -282,7 +282,7 @@ namespace DataAccess.Context.Migrations
                             Id = 1,
                             AppUserID = "94d24825-6148-434a-85b4-259de2b77f3d",
                             BirthDate = new DateTime(1996, 1, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedDate = new DateTime(2024, 4, 25, 13, 26, 34, 673, DateTimeKind.Local).AddTicks(2225),
+                            CreatedDate = new DateTime(2024, 4, 25, 10, 20, 37, 783, DateTimeKind.Local).AddTicks(9502),
                             Email = "sinaemre.bekar@bilgeadam.com",
                             FirstName = "Sina Emre",
                             LastName = "Bekar",

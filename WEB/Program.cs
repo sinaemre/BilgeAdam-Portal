@@ -39,6 +39,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<CreateRoleValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<UpdateRoleValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateHRValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<UpdateHRValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<EnterExamValidator>();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 

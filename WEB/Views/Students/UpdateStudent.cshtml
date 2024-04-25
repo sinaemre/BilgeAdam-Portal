@@ -22,6 +22,12 @@
                                     <input type="hidden" asp-for="CreatedDate" />
                                     <input type="hidden" asp-for="UpdatedDate" />
                                     <input type="hidden" asp-for="AppUserID" />
+                                    <div class=" my-2">
+                                        <div class="d-flex justify-content-center mb-2">
+                                            <img id="image" width="150" height="150" class="rounded-circle justify-content-center" src="~/studentsImages/@Model.ImagePath" />
+                                        </div>
+                                        <input id="uploadImage" class="form-control" asp-for="Image" />
+                                    </div>
                                     <div class="row">
                                         <div class="col-md-12 mb-4">
                                             <div data-mdb-input-init class="form-outline">
